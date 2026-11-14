@@ -1,6 +1,6 @@
 import { app } from "./app.js";
 import { env } from "./config/env.js";
-import { checkDatabaseConnection, closeDatabase } from "./db.js";
+import { checkDatabaseConnection, closeDatabase } from "./database/pool.js";
 
 const { port, host } = env;
 

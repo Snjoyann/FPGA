@@ -1,0 +1,8 @@
+import type { RequestHandler } from "express";
+
+export const corsMiddleware: RequestHandler = (_request, response, next) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  next();
+};

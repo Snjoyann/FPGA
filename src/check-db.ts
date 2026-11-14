@@ -1,4 +1,4 @@
-import { checkDatabaseConnection, closeDatabase } from "./db.js";
+import { checkDatabaseConnection, closeDatabase } from "./database/pool.js";
 
 try {
   await checkDatabaseConnection();

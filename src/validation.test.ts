@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { parsePositiveId, validateTestRunInput } from "./validation.js";
+import { validateTestRunInput } from "./domain/test-run.validation.js";
+import { parsePositiveId } from "./shared/http/params.js";
 
 const validInput = {
   regressionRunId: 1,

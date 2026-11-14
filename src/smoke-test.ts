@@ -3,7 +3,7 @@ import request from "supertest";
 
 import { app } from "./app.js";
 import { migrateDatabase } from "./database/migrator.js";
-import { closeDatabase } from "./db.js";
+import { closeDatabase } from "./database/pool.js";
 
 try {
   await migrateDatabase();
