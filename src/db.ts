@@ -1,16 +1,18 @@
-import "dotenv/config";
-
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
+import { config } from "dotenv";
 import pg from "pg";
+
+const rootEnvPath = fileURLToPath(new URL("../../.env", import.meta.url));
+config({ path: rootEnvPath });
 
 const { Pool } = pg;
 
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error("DATABASE_URL is missing. Copy backend/.env.example to backend/.env and configure PostgreSQL.");
+  throw new Error("DATABASE_URL is missing. Copy .env.example to the project root as .env and configure PostgreSQL.");
 }
 
 const pool = new Pool({ connectionString });
