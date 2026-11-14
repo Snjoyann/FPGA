@@ -55,7 +55,7 @@ CREATE INDEX IF NOT EXISTS test_runs_regression_run_id_idx ON test_runs(regressi
 CREATE INDEX IF NOT EXISTS test_runs_test_id_idx ON test_runs(test_id);
 CREATE INDEX IF NOT EXISTS test_runs_status_idx ON test_runs(status);
 
--- Safe, repeatable upgrades from the early learning schema.
+-- Safe upgrade path from the original learning schema.
 ALTER TABLE regression_runs ADD COLUMN IF NOT EXISTS version VARCHAR(80);
 ALTER TABLE regression_runs ADD COLUMN IF NOT EXISTS branch VARCHAR(100) NOT NULL DEFAULT 'main';
 ALTER TABLE regression_runs ADD COLUMN IF NOT EXISTS commit_sha VARCHAR(40);
@@ -92,4 +92,3 @@ END $$;
 
 CREATE INDEX IF NOT EXISTS test_runs_regression_test_idx
   ON test_runs(regression_run_id, test_id);
-
