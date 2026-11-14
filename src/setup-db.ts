@@ -7,7 +7,7 @@ import {
 try {
   await checkDatabaseConnection();
   await initializeDatabase();
-  console.log("PostgreSQL tables and seed data are ready.");
+  console.log("PostgreSQL schema is ready. Existing data was not changed.");
 } catch (error) {
   console.error("PostgreSQL database setup failed.");
   console.error(error);
