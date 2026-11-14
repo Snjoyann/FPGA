@@ -10,3 +10,11 @@ export const pool = new Pool({
   connectionTimeoutMillis: 10_000,
   idleTimeoutMillis: 30_000,
 });
+
+export async function checkDatabaseConnection() {
+  await pool.query("SELECT 1");
+}
+
+export async function closeDatabase() {
+  await pool.end();
+}
