@@ -1,17 +1,12 @@
 import { app } from "./app.js";
-import {
-  checkDatabaseConnection,
-  closeDatabase,
-  initializeDatabase,
-} from "./db.js";
+import { env } from "./config/env.js";
+import { checkDatabaseConnection, closeDatabase } from "./db.js";
 
-const port = Number(process.env.PORT ?? 4000);
-const host = process.env.HOST ?? "127.0.0.1";
+const { port, host } = env;
 
 async function startServer() {
   try {
     await checkDatabaseConnection();
-    await initializeDatabase();
     console.log("Connected to PostgreSQL database.");
 
     const server = app.listen(port, host, () => {

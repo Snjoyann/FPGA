@@ -1,0 +1,14 @@
+import { migrateDatabase } from "./migrator.js";
+
+try {
+  const { applied } = await migrateDatabase();
+  if (applied.length === 0) {
+    console.log("Database migrations are already up to date.");
+  } else {
+    console.log(`Applied ${applied.length} migration(s): ${applied.join(", ")}`);
+  }
+} catch (error) {
+  console.error("Database migration failed.");
+  console.error(error);
+  process.exitCode = 1;
+}

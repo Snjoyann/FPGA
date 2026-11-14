@@ -1,21 +1,6 @@
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-
-import { config } from "dotenv";
 import pg from "pg";
 
-const rootEnvPath = fileURLToPath(new URL("../../.env", import.meta.url));
-config({ path: rootEnvPath });
-
-const { Pool } = pg;
-
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is missing. Copy .env.example to the project root as .env and configure PostgreSQL.");
-}
-
-const pool = new Pool({ connectionString });
+import { pool } from "./database/pool.js";
 
 export const TEST_RUN_STATUSES = ["queued", "running", "passed", "failed", "skipped"] as const;
 export type TestRunStatus = (typeof TEST_RUN_STATUSES)[number];
@@ -86,12 +71,6 @@ const testRunSelect = `
 
 export async function checkDatabaseConnection() {
   await pool.query("SELECT 1");
-}
-
-export async function initializeDatabase() {
-  const schemaPath = fileURLToPath(new URL("../database/schema.sql", import.meta.url));
-  const schemaSql = await readFile(schemaPath, "utf8");
-  await pool.query(schemaSql);
 }
 
 export async function getCatalog() {

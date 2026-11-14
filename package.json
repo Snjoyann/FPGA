@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "start": "npm run db:check && tsx src/server.ts",
-    "dev:db": "npm run db:check && tsx watch src/server.ts",
+    "dev": "npm run db:migrate && tsx watch src/server.ts",
+    "start": "npm run db:migrate && npm run db:check && tsx src/server.ts",
+    "dev:db": "npm run dev",
     "test": "tsx --test src/*.test.ts",
     "test:smoke": "tsx src/smoke-test.ts",
     "typecheck": "tsc --noEmit",
-    "db:setup": "tsx src/setup-db.ts",
+    "db:migrate": "tsx src/database/run-migrations.ts",
+    "db:setup": "npm run db:migrate",
     "db:check": "tsx src/check-db.ts",
     "postinstall": "node -e \"console.log('Dependencies are ready.')\""
   },

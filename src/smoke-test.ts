@@ -2,10 +2,11 @@ import assert from "node:assert/strict";
 import request from "supertest";
 
 import { app } from "./app.js";
-import { closeDatabase, initializeDatabase } from "./db.js";
+import { migrateDatabase } from "./database/migrator.js";
+import { closeDatabase } from "./db.js";
 
 try {
-  await initializeDatabase();
+  await migrateDatabase();
 
   const health = await request(app).get("/api/health");
   assert.equal(health.status, 200);
