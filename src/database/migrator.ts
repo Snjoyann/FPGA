@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import pg from "pg";
@@ -16,7 +17,7 @@ type AppliedMigration = {
   checksum: string;
 };
 
-export async function migrateDatabase(): Promise<{ applied: string[] }> {
+export async function migrateDatabase(): Promise<{ applied: string[]; total: number }> {
   const client = new Client({ connectionString: env.databaseDirectUrl });
   const applied: string[] = [];
   let lockAcquired = false;
@@ -38,6 +39,9 @@ export async function migrateDatabase(): Promise<{ applied: string[] }> {
     const files = (await readdir(migrationsDirectory))
       .filter((file) => migrationFilePattern.test(file))
       .sort((left, right) => left.localeCompare(right));
+    if (files.length === 0) {
+      throw new Error(`No migration files were found in ${migrationsDirectory}.`);
+    }
 
     const result = await client.query<AppliedMigration>(
       "SELECT name, checksum FROM schema_migrations ORDER BY name",
@@ -45,7 +49,7 @@ export async function migrateDatabase(): Promise<{ applied: string[] }> {
     const completed = new Map(result.rows.map((migration) => [migration.name, migration.checksum]));
 
     for (const file of files) {
-      const sql = await readFile(`${migrationsDirectory}/${file}`, "utf8");
+      const sql = await readFile(path.join(migrationsDirectory, file), "utf8");
       const checksum = createHash("sha256").update(sql).digest("hex");
       const existingChecksum = completed.get(file);
 
@@ -71,7 +75,7 @@ export async function migrateDatabase(): Promise<{ applied: string[] }> {
       }
     }
 
-    return { applied };
+    return { applied, total: files.length };
   } finally {
     if (lockAcquired) {
       await client.query("SELECT pg_advisory_unlock($1)", [migrationLockId]).catch(() => undefined);
